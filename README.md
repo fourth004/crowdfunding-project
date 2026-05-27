@@ -1,57 +1,156 @@
-# Sample Hardhat 3 Beta Project (`mocha` and `ethers`)
+# EduFund – Decentralized Crowdfunding Platform
 
-This project showcases a Hardhat 3 Beta project using `mocha` for tests and the `ethers` library for Ethereum interactions.
+EduFund is a blockchain-based crowdfunding platform built using Ethereum smart contracts, Hardhat, React, and Ethers.js.  
+It allows multiple simulated users to create campaigns, donate ETH, finalize campaigns, and withdraw refunds transparently on a local blockchain network.
 
-To learn more about the Hardhat 3 Beta, please visit the [Getting Started guide](https://hardhat.org/docs/getting-started#getting-started-with-hardhat-3). To share your feedback, join our [Hardhat 3 Beta](https://hardhat.org/hardhat3-beta-telegram-group) Telegram group or [open an issue](https://github.com/NomicFoundation/hardhat/issues/new) in our GitHub issue tracker.
+---
 
-## Project Overview
+## Features
 
-This example project includes:
+### Multi-User Simulation
+- Switch between multiple simulated blockchain users
+- Each user has their own Hardhat wallet with a private key and address
+- Users can create campaigns and donate independently
 
-- A simple Hardhat configuration file.
-- Foundry-compatible Solidity unit tests.
-- TypeScript integration tests using `mocha` and ethers.js
-- Examples demonstrating how to connect to different types of networks, including locally simulating OP mainnet.
+### Campaign Management
+- Create fundraising campaigns with:
+  - Title
+  - Description
+  - Funding goal (in ETH)
+  - Deadline (minutes, hours, days, months, or years)
 
-## Usage
+### Donation System
+- Donate ETH to active campaigns (minimum 0.01 ETH)
+- Real-time funding progress tracking
+- Prevents creators from donating to their own campaigns
 
-### Running Tests
+### Campaign States
+Campaigns automatically move between:
+- **Ongoing** — active and accepting donations
+- **Successful** — goal met, funds transferred to creator
+- **Failed** — goal not met, refunds available
 
-To run all the tests in the project, execute the following command:
+### Finalization Logic
+- Any user can finalize an expired campaign
+- Successful campaigns transfer funds to the creator automatically
+- Failed campaigns unlock refunds for donors
 
-```shell
-npx hardhat test
+### Refund System
+- Only users who donated can withdraw refunds
+- Refund eligibility checked directly from the blockchain
+- Prevents duplicate refunds
+- Shows "already refunded" message after withdrawal
+
+### Transaction History
+- All transactions read directly from blockchain events
+- Persists for the duration of the Hardhat node session
+- Tracks:
+  - Campaign creation
+  - Donations
+  - Campaign finalization
+  - Refund withdrawals
+- Shows transaction hash and block number for each entry
+
+### Smart Contract Security
+- Reentrancy guard on all fund transfers
+- Withdraw pattern used for refunds
+- Creator cannot donate to their own campaign
+- Minimum donation enforced on-chain
+
+### Modern UI
+- Dark themed responsive interface
+- Progress bars and status badges
+- Campaign filtering (All, Ongoing, Successful, Failed, Mine)
+- Donor count and user contribution displayed per campaign
+- Dedicated transaction history page
+
+---
+
+## Tech Stack
+
+### Blockchain
+- Solidity ^0.8.18
+- Ethereum (local Hardhat network)
+- Hardhat v3
+
+### Frontend
+- React
+- JavaScript
+- React Router
+
+### Web3 Integration
+- Ethers.js v6
+
+### Testing
+- Mocha
+- Chai
+- 24 passing tests
+
+### Development Tools
+- Node.js
+- npm
+
+---
+
+## Project Structure
+
+```bash
+crowdfunding-project/
+│
+├── contracts/          # Solidity smart contracts
+├── frontend/           # React frontend
+│   └── src/
+│       ├── components/ # React components
+│       ├── context/    # UserContext for user switching
+│       └── utils/      # constants, ABI, user list
+├── scripts/            # Deployment scripts
+├── test/               # Smart contract tests (24 tests)
+├── artifacts/          # Compiled contracts
+├── hardhat.config.js
+├── package.json
+└── README.md
 ```
 
-You can also selectively run the Solidity or `mocha` tests:
+---
 
-```shell
-npx hardhat test solidity
-npx hardhat test mocha
-```
+### Installation & Setup
+1. Clone Repository
+git clone https://github.com/YOUR_USERNAME/crowdfunding-project.git
+cd crowdfunding-project
+2. Install Dependencies
+npm install
+3. Start Hardhat Local Blockchain
+npx hardhat node
 
-### Make a deployment to Sepolia
+4. Deploy Smart Contract
+In a new terminal:
+npx hardhat run scripts/deploy.js --network localhost
 
-This project includes an example Ignition module to deploy the contract. You can deploy this module to a locally simulated chain or to Sepolia.
+5. Start Frontend
+cd frontend
+npm install
+npm start
 
-To run the deployment to a local chain:
 
-```shell
-npx hardhat ignition deploy ignition/modules/Counter.ts
-```
+### How It Works
+- Select a simulated user
+- Create a crowdfunding campaign
+- Donate ETH to campaigns
+- Finalize campaigns after deadline
+- Withdraw refunds from failed campaigns
+- View transaction history
 
-To run the deployment to Sepolia, you need an account with funds to send the transaction. The provided Hardhat configuration includes a Configuration Variable called `SEPOLIA_PRIVATE_KEY`, which you can use to set the private key of the account you want to use.
+## Future Improvements
 
-You can set the `SEPOLIA_PRIVATE_KEY` variable using the `hardhat-keystore` plugin or by setting it as an environment variable.
+- MetaMask integration
+- IPFS image uploads
+- Authentication system
+- Campaign categories and search
+- Real blockchain deployment (Sepolia)
 
-To set the `SEPOLIA_PRIVATE_KEY` config variable using `hardhat-keystore`:
 
-```shell
-npx hardhat keystore set SEPOLIA_PRIVATE_KEY
-```
+### Important Notes
 
-After setting the variable, you can run the deployment with the Sepolia network:
-
-```shell
-npx hardhat ignition deploy --network sepolia ignition/modules/Counter.ts
-```
+- The project currently uses a local Hardhat blockchain
+- Wallets are simulated using predefined private keys
+- This project is intended for educational purposes
