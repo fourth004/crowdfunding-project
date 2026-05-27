@@ -115,7 +115,7 @@ crowdfunding-project/
 
 ### Installation & Setup
 1. Clone Repository
-git clone https://github.com/YOUR_USERNAME/crowdfunding-project.git
+git clone https://github.com/fourth004/crowdfunding-project.git
 cd crowdfunding-project
 2. Install Dependencies
 npm install
